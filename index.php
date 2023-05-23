@@ -6,6 +6,7 @@ use Slim\Routing\RouteCollectorProxy;
 use Slim\Psr7\Factory\ResponseFactory;
 use Dotenv\Dotenv;
 
+require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/CustomerController.php';
 
