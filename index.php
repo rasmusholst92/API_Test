@@ -7,8 +7,7 @@ use Slim\Psr7\Factory\ResponseFactory;
 use Dotenv\Dotenv;
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/CustomerController.php';
+require_once __DIR__ . '/customer/customer_controller.php';
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -18,6 +17,7 @@ $serverRequestCreator = ServerRequestCreatorFactory::create();
 $request = $serverRequestCreator->createServerRequestFromGlobals();
 
 $responseFactory = new ResponseFactory();
+$responseFactory = $app->getResponseFactory();
 
 $pdo = new PDO(
     'mysql:host=' . $_ENV['DB_HOST'] . ';port=' . $_ENV['DB_PORT'] . ';dbname=' . $_ENV['DB_NAME'],
@@ -36,6 +36,7 @@ $app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory,
 
     $group->get('/customers', [$customerController, 'getCustomers']);
     $group->get('/customers/{id}', [$customerController, 'getCustomerById']);
+    $group->post('/customers', [$customerController, 'createCustomer']);
 });
 
 $app->run($request);
