@@ -71,4 +71,27 @@ class CustomerController
 
         return $response;
     }
+
+    public function deleteCustomer(Request $request, Response $response, $args)
+    {
+        $id = $args['id'];
+
+        $statement = $this->pdo->prepare('SELECT * FROM customers WHERE customer_id = :id');
+        $statement->bindParam(':id', $id);
+        $statement->execute();
+        $customer = $statement->fetch();
+
+        if (!$customer) {
+            $response = $response->withStatus(404);
+            $response->getBody()->write(json_encode(['error' => 'Customer not found']));
+            return $response->withHeader('Content-Type', 'application/json');
+        }
+
+        $deleteStatement = $this->pdo->prepare('DELETE FROM customers WHERE customer_id = :id');
+        $deleteStatement->bindParam(':id', $id);
+        $deleteStatement->execute();
+
+        $response->getBody()->write(json_encode(['message' => 'Customer deleted successfully']));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
 }

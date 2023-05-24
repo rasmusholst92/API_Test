@@ -46,6 +46,7 @@ $app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory,
     $group->get('/customers', [$customerController, 'getCustomers']);
     $group->get('/customers/{id}', [$customerController, 'getCustomerById']);
     $group->post('/customers', [$customerController, 'createCustomer']);
+    $group->delete('/customers/{id}', [$customerController, 'deleteCustomer']);
 });
 
 $app->run($request);
