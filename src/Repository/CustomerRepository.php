@@ -25,12 +25,11 @@ class CustomerRepository
 
     public function createCustomer($data)
     {
-        $statement = $this->pdo->prepare('INSERT INTO customers (first_name, last_name, street_name, house_no, zipcode) 
-        VALUES (:first_name, :last_name, :street_name, :house_no, :zipcode)');
+        $statement = $this->pdo->prepare('INSERT INTO customers (first_name, last_name, address, zipcode) 
+        VALUES (:first_name, :last_name, :address, :zipcode)');
         $statement->bindValue(':first_name', $data['first_name']);
         $statement->bindValue(':last_name', $data['last_name']);
-        $statement->bindValue(':street_name', $data['street_name']);
-        $statement->bindValue(':house_no', $data['house_no']);
+        $statement->bindValue(':address', $data['address']);
         $statement->bindValue(':zipcode', $data['zipcode']);
         $statement->execute();
         return $this->pdo->lastInsertId();
