@@ -49,7 +49,8 @@ class CustomerController
             $response->getBody()->write(json_encode(['error' => 'Invalid data format']));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
-        $response->getBody()->write(json_encode(['message' => "Customer created successfully"]));
+        $newCustomerId = $this->service->createCustomer($data);
+        $response->getBody()->write(json_encode(['message' => "Customer successfully created"]));
         return $response->withHeader('Content-Type', 'application/json');
     }
 

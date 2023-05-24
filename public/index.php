@@ -4,9 +4,9 @@ use Slim\Routing\RouteCollectorProxy;
 use Dotenv\Dotenv;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../src/Customer/CustomerController.php';
-require_once __DIR__ . '/../src/Customer/CustomerService.php';
-require_once __DIR__ . '/../src/Customer/CustomerRepository.php';
+require_once __DIR__ . '/../src/Controller/CustomerController.php';
+require_once __DIR__ . '/../src/Service/CustomerService.php';
+require_once __DIR__ . '/../src/Repository/CustomerRepository.php';
 
 // Load environment variables
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
@@ -35,7 +35,7 @@ $pdo = $pdoFactory();
 $app->addErrorMiddleware(true, true, true);
 $app->addBodyParsingMiddleware();
 
-// Create instances of the CustomerRepository and CustomerService
+// Create instances of the repositories and servicies
 $customerRepository = new CustomerRepository($pdo);
 $customerService = new CustomerService($customerRepository);
 

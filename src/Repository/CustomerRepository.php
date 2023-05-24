@@ -36,8 +36,6 @@ class CustomerRepository
         return $this->pdo->lastInsertId();
     }
 
-
-
     public function deleteCustomer($id)
     {
         $statement = $this->pdo->prepare('SELECT * FROM customers WHERE customer_id = :id');
