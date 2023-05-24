@@ -5,6 +5,8 @@ use Dotenv\Dotenv;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/Customer/CustomerController.php';
+require_once __DIR__ . '/../src/Customer/CustomerService.php';
+require_once __DIR__ . '/../src/Customer/CustomerRepository.php';
 
 // Load environment variables
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
@@ -31,10 +33,15 @@ $pdo = $pdoFactory();
 
 // Add error middleware
 $app->addErrorMiddleware(true, true, true);
+$app->addBodyParsingMiddleware();
+
+// Create instances of the CustomerRepository and CustomerService
+$customerRepository = new CustomerRepository($pdo);
+$customerService = new CustomerService($customerRepository);
 
 // Define API routes
-$app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $pdo) {
-    $customerController = new CustomerController($responseFactory, $pdo);
+$app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $customerService) {
+    $customerController = new CustomerController($responseFactory, $customerService);
 
     $group->get('/customers', [$customerController, 'getCustomers']);
     $group->get('/customers/{id}', [$customerController, 'getCustomerById']);

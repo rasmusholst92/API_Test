@@ -1,0 +1,57 @@
+<?php
+
+class CustomerRepository
+{
+    private $pdo;
+
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function getAllCustomers()
+    {
+        $statement = $this->pdo->query('SELECT * FROM customers');
+        return $statement->fetchAll();
+    }
+
+    public function findCustomerById($id)
+    {
+        $statement = $this->pdo->prepare('SELECT * FROM customers WHERE customer_id = :id');
+        $statement->bindParam(':id', $id);
+        $statement->execute();
+        return $statement->fetch();
+    }
+
+    public function createCustomer($data)
+    {
+        $statement = $this->pdo->prepare('INSERT INTO customers (first_name, last_name, street_name, house_no, zipcode) 
+        VALUES (:first_name, :last_name, :street_name, :house_no, :zipcode)');
+        $statement->bindValue(':first_name', $data['first_name']);
+        $statement->bindValue(':last_name', $data['last_name']);
+        $statement->bindValue(':street_name', $data['street_name']);
+        $statement->bindValue(':house_no', $data['house_no']);
+        $statement->bindValue(':zipcode', $data['zipcode']);
+        $statement->execute();
+        return $this->pdo->lastInsertId();
+    }
+
+
+
+    public function deleteCustomer($id)
+    {
+        $statement = $this->pdo->prepare('SELECT * FROM customers WHERE customer_id = :id');
+        $statement->bindParam(':id', $id);
+        $statement->execute();
+        $customer = $statement->fetch();
+
+        if (!$customer) {
+            throw new \InvalidArgumentException('Customer not found');
+        }
+
+        $deleteStatement = $this->pdo->prepare('DELETE FROM customers WHERE customer_id = :id');
+        $deleteStatement->bindParam(':id', $id);
+        $deleteStatement->execute();
+    }
+
+}
