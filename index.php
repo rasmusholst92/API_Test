@@ -8,10 +8,6 @@ use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Tuupola\Middleware\CorsMiddleware;
-use Dotenv\Dotenv;
-
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
 $app = AppFactory::create();
 $serverRequestCreator = ServerRequestCreatorFactory::create();
@@ -29,15 +25,7 @@ $app->add(new CorsMiddleware([
     'cache' => 0,
 ]));
 
-$pdo = new PDO(
-    'mysql:host=' . $_ENV['DB_HOST'] . ';port=' . $_ENV['DB_PORT'] . ';dbname=' . $_ENV['DB_NAME'],
-    $_ENV['DB_USER'],
-    $_ENV['DB_PASS'],
-    [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]
-);
+require_once __DIR__ . '/config/database.php';
 
 $customerRepository = new CustomerRepository($pdo);
 $customerService = new CustomerService($customerRepository);
