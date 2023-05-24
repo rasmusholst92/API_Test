@@ -39,7 +39,7 @@ class CustomerService
     {
         $customer = $this->repository->findCustomerById($id);
         if (!$customer) {
-            throw new Exception("Customer does not exist");
+            throw new Exception("Customer not found");
         }
 
         $this->repository->updateCustomer($id, $data);
