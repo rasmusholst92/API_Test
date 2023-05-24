@@ -1,13 +1,16 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/Repository/CustomerRepository.php';
-require_once __DIR__ . '/Service/CustomerService.php';
-require_once __DIR__ . '/Controller/CustomerController.php';
 
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Tuupola\Middleware\CorsMiddleware;
+use Dotenv\Dotenv;
+
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/customer/customer_controller.php';
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 $app = AppFactory::create();
 $serverRequestCreator = ServerRequestCreatorFactory::create();
@@ -25,15 +28,21 @@ $app->add(new CorsMiddleware([
     'cache' => 0,
 ]));
 
-require_once __DIR__ . '/config/database.php';
-
-$customerRepository = new CustomerRepository($pdo);
-$customerService = new CustomerService($customerRepository);
-$customerController = new CustomerController($customerService);
+$pdo = new PDO(
+    'mysql:host=' . $_ENV['DB_HOST'] . ';port=' . $_ENV['DB_PORT'] . ';dbname=' . $_ENV['DB_NAME'],
+    $_ENV['DB_USER'],
+    $_ENV['DB_PASS'],
+    [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]
+);
 
 $app->addErrorMiddleware(true, true, true);
 
-$app->group('/api', function (RouteCollectorProxy $group) use ($customerController) {
+$app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $pdo) {
+    $customerController = new CustomerController($responseFactory, $pdo);
+
     $group->get('/customers', [$customerController, 'getCustomers']);
     $group->get('/customers/{id}', [$customerController, 'getCustomerById']);
     $group->post('/customers', [$customerController, 'createCustomer']);
