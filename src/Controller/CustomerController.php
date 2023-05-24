@@ -71,4 +71,23 @@ class CustomerController
         }
     }
 
+    public function updateCustomer(Request $request, Response $response, $args)
+    {
+        $id = $args['id'];
+        $data = $request->getParsedBody();
+
+        if ($data === null || !is_array($data)) {
+            $response->getBody()->write(json_encode(['error' => 'Invalid data format']));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+
+        try {
+            $this->service->updateCustomer($id, $data);
+            $response->getBody()->write(json_encode(['message' => "Customer successfully updated"]));
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (Exception $e) {
+            $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
+            return $response->withStatus(404); // Not found
+        }
+    }
 }

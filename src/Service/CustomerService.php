@@ -29,9 +29,19 @@ class CustomerService
         $customer = $this->repository->findCustomerById($id);
 
         if (!$customer) {
-            throw new \InvalidArgumentException('Customer not found');
+            throw new Exception('Customer not found');
         }
 
         $this->repository->deleteCustomer($id);
+    }
+
+    public function updateCustomer($id, $data)
+    {
+        $customer = $this->repository->findCustomerById($id);
+        if (!$customer) {
+            throw new Exception("Customer does not exist");
+        }
+
+        $this->repository->updateCustomer($id, $data);
     }
 }

@@ -51,4 +51,16 @@ class CustomerRepository
         $deleteStatement->execute();
     }
 
+    public function updateCustomer($id, $data)
+    {
+        $statement = $this->pdo->prepare('UPDATE customers SET first_name = :first_name, last_name = :last_name, address = :address, zipcode = :zipcode WHERE customer_id = :id');
+        $statement->execute([
+            ':id' => $id,
+            ':first_name' => $data['first_name'],
+            ':last_name' => $data['last_name'],
+            ':address' => $data['address'],
+            ':zipcode' => $data['zipcode'],
+        ]);
+    }
+
 }
