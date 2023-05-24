@@ -3,7 +3,7 @@
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 use Slim\Routing\RouteCollectorProxy;
-use Slim\Psr7\Factory\ResponseFactory;
+use Tuupola\Middleware\CorsMiddleware;
 use Dotenv\Dotenv;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -16,8 +16,17 @@ $app = AppFactory::create();
 $serverRequestCreator = ServerRequestCreatorFactory::create();
 $request = $serverRequestCreator->createServerRequestFromGlobals();
 
-$responseFactory = new ResponseFactory();
 $responseFactory = $app->getResponseFactory();
+
+// Add the CORS middleware
+$app->add(new CorsMiddleware([
+    'origin' => ['http://localhost:3000'],
+    'methods' => ['GET', 'POST', 'PUT', 'DELETE'],
+    'headers.allow' => ['Content-Type', 'Authorization'],
+    'headers.expose' => [],
+    'credentials' => true,
+    'cache' => 0,
+]));
 
 $pdo = new PDO(
     'mysql:host=' . $_ENV['DB_HOST'] . ';port=' . $_ENV['DB_PORT'] . ';dbname=' . $_ENV['DB_NAME'],
