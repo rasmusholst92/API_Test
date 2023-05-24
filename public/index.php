@@ -6,10 +6,10 @@ use Slim\Routing\RouteCollectorProxy;
 use Tuupola\Middleware\CorsMiddleware;
 use Dotenv\Dotenv;
 
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/customer/CustomerController.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../src/Customer/CustomerController.php';
 
-$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
 $app = AppFactory::create();
@@ -28,15 +28,9 @@ $app->add(new CorsMiddleware([
     'cache' => 0,
 ]));
 
-$pdo = new PDO(
-    'mysql:host=' . $_ENV['DB_HOST'] . ';port=' . $_ENV['DB_PORT'] . ';dbname=' . $_ENV['DB_NAME'],
-    $_ENV['DB_USER'],
-    $_ENV['DB_PASS'],
-    [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]
-);
+// Require the database configuration
+$pdoFactory = require_once __DIR__ . '/../config/database.php';
+$pdo = $pdoFactory();
 
 $app->addErrorMiddleware(true, true, true);
 
