@@ -7,7 +7,7 @@ use Tuupola\Middleware\CorsMiddleware;
 use Dotenv\Dotenv;
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/customer/customer_controller.php';
+require_once __DIR__ . '/customer/CustomerController.php';
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
