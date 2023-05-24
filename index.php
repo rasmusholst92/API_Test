@@ -1,13 +1,14 @@
 <?php
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/Repository/CustomerRepository.php';
+require_once __DIR__ . '/Service/CustomerService.php';
+require_once __DIR__ . '/Controller/CustomerController.php';
 
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Tuupola\Middleware\CorsMiddleware;
 use Dotenv\Dotenv;
-
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/customer/customer_controller.php';
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -38,11 +39,13 @@ $pdo = new PDO(
     ]
 );
 
+$customerRepository = new CustomerRepository($pdo);
+$customerService = new CustomerService($customerRepository);
+$customerController = new CustomerController($customerService);
+
 $app->addErrorMiddleware(true, true, true);
 
-$app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $pdo) {
-    $customerController = new CustomerController($responseFactory, $pdo);
-
+$app->group('/api', function (RouteCollectorProxy $group) use ($customerController) {
     $group->get('/customers', [$customerController, 'getCustomers']);
     $group->get('/customers/{id}', [$customerController, 'getCustomerById']);
     $group->post('/customers', [$customerController, 'createCustomer']);

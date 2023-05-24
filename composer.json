@@ -1,8 +1,15 @@
 {
-    "require": {
-      "slim/slim": "^4.9",
-      "vlucas/phpdotenv": "^5.4",
-        "slim/psr7": "^1.6",
-        "tuupola/cors-middleware": "^1.4"
+  "require": {
+    "slim/slim": "^4.9",
+    "vlucas/phpdotenv": "^5.4",
+    "slim/psr7": "^1.6",
+    "tuupola/cors-middleware": "^1.4"
+  },
+  "autoload": {
+    "psr-4": {
+        "Repository\\": "Repository/",
+        "Service\\": "Service/",
+        "Controller\\": "Controller/"
     }
   }
+}
