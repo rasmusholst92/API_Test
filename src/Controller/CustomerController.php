@@ -51,8 +51,9 @@ class CustomerController
             $newCustomerId = $this->service->createCustomer($data);
             $response->getBody()->write(json_encode(['message' => "Customer successfully created"]));
             return $response->withHeader('Content-Type', 'application/json');
-        } catch (InvalidArgumentException $e) {
-            $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
+        } catch (\Exception $e) {
+            $errors = json_decode($e->getMessage(), true);
+            $response->getBody()->write(json_encode(['errors' => $errors]));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400); // Invalid data
         }
     }
@@ -76,22 +77,30 @@ class CustomerController
 
     public function updateCustomer(Request $request, Response $response, $args)
     {
-        $id = $args['id'];
-        $data = $request->getParsedBody();
-        CustomerValidation::validate($data);
-
-        if ($data === null || !is_array($data)) {
-            $response->getBody()->write(json_encode(['error' => 'Invalid data format']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-        }
-
         try {
+            $id = $args['id'];
+            $data = $request->getParsedBody();
+
+            // Validate data using our validation class
+            CustomerValidation::validate($data);
+
             $this->service->updateCustomer($id, $data);
             $response->getBody()->write(json_encode(['message' => "Customer successfully updated"]));
             return $response->withHeader('Content-Type', 'application/json');
-        } catch (Exception $e) {
-            $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
-            return $response->withStatus(404); // Not found
+        } catch (\Exception $e) {
+            // If an exception occurs, decode the error messages
+            $errors = json_decode($e->getMessage(), true);
+            // If the messages aren't an array (i.e., it's a different kind of exception), put the message in an array
+            if (!is_array($errors)) {
+                $errors = [$e->getMessage()];
+            }
+
+            // Return all error messages
+            $response->getBody()->write(json_encode(['errors' => $errors]));
+
+            // Determine the status code based on the type of exception
+            $status = $e instanceof \InvalidArgumentException ? 400 : 500;
+            return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
         }
     }
 }
