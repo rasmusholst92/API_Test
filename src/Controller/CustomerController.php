@@ -78,6 +78,7 @@ class CustomerController
     {
         $id = $args['id'];
         $data = $request->getParsedBody();
+        CustomerValidation::validate($data);
 
         if ($data === null || !is_array($data)) {
             $response->getBody()->write(json_encode(['error' => 'Invalid data format']));
