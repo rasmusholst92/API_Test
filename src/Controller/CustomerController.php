@@ -2,6 +2,7 @@
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use Validation\CustomerValidation;
 
 class CustomerController
 {
@@ -44,14 +45,16 @@ class CustomerController
 
     public function createCustomer(Request $request, Response $response, $args)
     {
-        $data = $request->getParsedBody();
-        if ($data === null || !is_array($data)) {
-            $response->getBody()->write(json_encode(['error' => 'Invalid data format']));
+        try {
+            $data = $request->getParsedBody();
+            CustomerValidation::validate($data);
+            $newCustomerId = $this->service->createCustomer($data);
+            $response->getBody()->write(json_encode(['message' => "Customer successfully created"]));
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (InvalidArgumentException $e) {
+            $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400); // Invalid data
         }
-        $newCustomerId = $this->service->createCustomer($data);
-        $response->getBody()->write(json_encode(['message' => "Customer successfully created"]));
-        return $response->withHeader('Content-Type', 'application/json');
     }
 
 
