@@ -3,8 +3,11 @@
 use Slim\Routing\RouteCollectorProxy;
 use Dotenv\Dotenv;
 
+// Importere diverse repositories, services og controllers.
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../src/Customer/CustomerController.php';
+require_once __DIR__ . '/../src/Controller/CustomerController.php';
+require_once __DIR__ . '/../src/Service/CustomerService.php';
+require_once __DIR__ . '/../src/Repository/CustomerRepository.php';
 
 // Load environment variables
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
@@ -31,15 +34,21 @@ $pdo = $pdoFactory();
 
 // Add error middleware
 $app->addErrorMiddleware(true, true, true);
+$app->addBodyParsingMiddleware();
+
+// Create instances of the repositories and servicies
+$customerRepository = new CustomerRepository($pdo);
+$customerService = new CustomerService($customerRepository);
 
 // Define API routes
-$app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $pdo) {
-    $customerController = new CustomerController($responseFactory, $pdo);
+$app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $customerService) {
+    $customerController = new CustomerController($responseFactory, $customerService);
 
     $group->get('/customers', [$customerController, 'getCustomers']);
     $group->get('/customers/{id}', [$customerController, 'getCustomerById']);
     $group->post('/customers', [$customerController, 'createCustomer']);
     $group->delete('/customers/{id}', [$customerController, 'deleteCustomer']);
+    $group->put('/customers/{id}', [$customerController, 'updateCustomer']);
 });
 
 // Run the application
