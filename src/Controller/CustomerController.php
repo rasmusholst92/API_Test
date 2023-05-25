@@ -47,7 +47,7 @@ class CustomerController
         $data = $request->getParsedBody();
         if ($data === null || !is_array($data)) {
             $response->getBody()->write(json_encode(['error' => 'Invalid data format']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(400); // Invalid data
         }
         $newCustomerId = $this->service->createCustomer($data);
         $response->getBody()->write(json_encode(['message' => "Customer successfully created"]));
@@ -64,10 +64,10 @@ class CustomerController
             return $response->withHeader('Content-Type', 'application/json');
         } catch (\InvalidArgumentException $e) {
             $response->getBody()->write(json_encode(['error' => 'Customer not found']));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(404); // Not found
         } catch (Exception $e) {
             $response->getBody()->write(json_encode(['message' => $e->getMessage()]));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500); // Internal error
         }
     }
 

@@ -3,6 +3,7 @@
 use Slim\Routing\RouteCollectorProxy;
 use Dotenv\Dotenv;
 
+// Importere diverse repositories, services og controllers.
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/Controller/CustomerController.php';
 require_once __DIR__ . '/../src/Service/CustomerService.php';
