@@ -3,7 +3,7 @@
 use Slim\Routing\RouteCollectorProxy;
 use Dotenv\Dotenv;
 
-// Importere diverse repositories, services og controllers.
+// Import various repositories, services, and controllers.
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/Controller/UserController.php';
 require_once __DIR__ . '/../src/Service/UserService.php';
@@ -21,35 +21,28 @@ $app = $appFactory();
 $requestFactory = require_once __DIR__ . '/../config/request.php';
 $request = $requestFactory();
 
-// Set up response factory
+// Set up response factory  
 $responseFactory = $app->getResponseFactory();
 
-// Configure CORS middleware
+// Configure CORS middleware  
 $corsFactory = require_once __DIR__ . '/../config/cors.php';
 $corsFactory($app);
 
-// Establish PDO database connection
+// Establish PDO database connection  
 $pdoFactory = require_once __DIR__ . '/../config/database.php';
 $pdo = $pdoFactory();
 
-// Add error middleware
+// Add error middleware  
 $app->addErrorMiddleware(true, true, true);
 $app->addBodyParsingMiddleware();
 
-// Create instances of the repositories and servicies
-$userRepository = new userRepository($pdo);
-$userService = new userService($userRepository);
+// Create instances of the repositories and services  
+$userRepository = new UserRepository($pdo);
+$userService = new UserService($userRepository);
 
 // Define API routes
-$app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $userService) {
-    $userController = new userController($responseFactory, $userService);
+require_once __DIR__ . '/../src/routes.php';
+getRoutes($app, $responseFactory, $userService);
 
-    $group->get('/users', [$userController, 'getUsers']);
-    $group->get('/users/{id}', [$userController, 'getUserById']);
-    $group->post('/users', [$userController, 'createUser']);
-    $group->delete('/users/{id}', [$userController, 'deleteUser']);
-    $group->put('/users/{id}', [$userController, 'updateUser']);
-});
-
-// Run the application
+// Run the application  
 $app->run($request);
