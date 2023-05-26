@@ -2,24 +2,24 @@
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
-use Validation\CustomerValidation;
+use Validation\UserValidation;
 
-class CustomerController
+class UserController
 {
     private $responseFactory;
     private $service;
 
-    public function __construct(ResponseFactory $responseFactory, CustomerService $service)
+    public function __construct(ResponseFactory $responseFactory, UserService $service)
     {
         $this->responseFactory = $responseFactory;
         $this->service = $service;
     }
 
-    public function getCustomers(Request $request, Response $response, $args)
+    public function getUsers(Request $request, Response $response, $args)
     {
         try {
-            $customers = $this->service->getCustomers();
-            $response->getBody()->write(json_encode($customers));
+            $users = $this->service->getUsers();
+            $response->getBody()->write(json_encode($users));
             return $response->withHeader('Content-Type', 'application/json');
         } catch (Exception $e) {
             $response->getBody()->write($e->getMessage());
@@ -27,15 +27,15 @@ class CustomerController
         }
     }
 
-    public function getCustomerById(Request $request, Response $response, $args)
+    public function getUserById(Request $request, Response $response, $args)
     {
         try {
             $id = $args['id'];
-            $customer = $this->service->getCustomerById($id);
-            if ($customer === null) {
+            $user = $this->service->getUserById($id);
+            if ($user === null) {
                 return $response->withStatus(401);
             }
-            $response->getBody()->write(json_encode($customer));
+            $response->getBody()->write(json_encode($user));
             return $response->withHeader('Content-Type', 'application/json');
         } catch (Exception $e) {
             $response->getBody()->write($e->getMessage());
@@ -43,13 +43,13 @@ class CustomerController
         }
     }
 
-    public function createCustomer(Request $request, Response $response, $args)
+    public function createUser(Request $request, Response $response, $args)
     {
         try {
             $data = $request->getParsedBody();
-            CustomerValidation::validate($data);
-            $newCustomerId = $this->service->createCustomer($data);
-            $response->getBody()->write(json_encode(['message' => "Customer successfully created"]));
+            UserValidation::validate($data);
+            $newUserId = $this->service->createUser($data);
+            $response->getBody()->write(json_encode(['message' => "User successfully created"]));
             return $response->withHeader('Content-Type', 'application/json');
         } catch (\Exception $e) {
             $errors = json_decode($e->getMessage(), true);
@@ -59,15 +59,15 @@ class CustomerController
     }
 
 
-    public function deleteCustomer(Request $request, Response $response, $args)
+    public function deleteUser(Request $request, Response $response, $args)
     {
         try {
             $id = $args['id'];
-            $this->service->deleteCustomer($id);
-            $response->getBody()->write(json_encode(['message' => 'Customer deleted successfully']));
+            $this->service->deleteUser($id);
+            $response->getBody()->write(json_encode(['message' => 'User deleted successfully']));
             return $response->withHeader('Content-Type', 'application/json');
         } catch (\InvalidArgumentException $e) {
-            $response->getBody()->write(json_encode(['error' => 'Customer not found']));
+            $response->getBody()->write(json_encode(['error' => 'User not found']));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(404); // Not found
         } catch (Exception $e) {
             $response->getBody()->write(json_encode(['message' => $e->getMessage()]));
@@ -75,17 +75,17 @@ class CustomerController
         }
     }
 
-    public function updateCustomer(Request $request, Response $response, $args)
+    public function updateUser(Request $request, Response $response, $args)
     {
         try {
             $id = $args['id'];
             $data = $request->getParsedBody();
 
             // Validate data using our validation class
-            CustomerValidation::validate($data);
+            UserValidation::validate($data);
 
-            $this->service->updateCustomer($id, $data);
-            $response->getBody()->write(json_encode(['message' => "Customer successfully updated"]));
+            $this->service->updateUser($id, $data);
+            $response->getBody()->write(json_encode(['message' => "User successfully updated"]));
             return $response->withHeader('Content-Type', 'application/json');
         } catch (\Exception $e) {
             // If an exception occurs, decode the error messages

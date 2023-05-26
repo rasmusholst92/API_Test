@@ -2,7 +2,7 @@
 
 namespace Validation;
 
-class CustomerValidation
+class UserValidation
 {
     public static function validate($data)
     {
@@ -10,7 +10,7 @@ class CustomerValidation
             throw new \Exception('Invalid data format: not an array.');
         }
 
-        $requiredFields = ['first_name', 'last_name', 'address', 'zipcode'];
+        $requiredFields = ['username', 'email'];
         $errors = [];
 
         foreach ($requiredFields as $field) {
