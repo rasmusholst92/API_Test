@@ -25,7 +25,7 @@ $request = $requestFactory();
 $responseFactory = $app->getResponseFactory();
 
 // Configure CORS middleware
-$corsFactory = require_once __DIR__ . '/..cu/config/cors.php';
+$corsFactory = require_once __DIR__ . '/../config/cors.php';
 $corsFactory($app);
 
 // Establish PDO database connection
