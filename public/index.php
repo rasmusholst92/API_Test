@@ -5,9 +5,9 @@ use Dotenv\Dotenv;
 
 // Importere diverse repositories, services og controllers.
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../src/Controller/CustomerController.php';
-require_once __DIR__ . '/../src/Service/CustomerService.php';
-require_once __DIR__ . '/../src/Repository/CustomerRepository.php';
+require_once __DIR__ . '/../src/Controller/UserController.php';
+require_once __DIR__ . '/../src/Service/UserService.php';
+require_once __DIR__ . '/../src/Repository/UserRepository.php';
 
 // Load environment variables
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
@@ -25,7 +25,7 @@ $request = $requestFactory();
 $responseFactory = $app->getResponseFactory();
 
 // Configure CORS middleware
-$corsFactory = require_once __DIR__ . '/../config/cors.php';
+$corsFactory = require_once __DIR__ . '/..cu/config/cors.php';
 $corsFactory($app);
 
 // Establish PDO database connection
@@ -37,18 +37,18 @@ $app->addErrorMiddleware(true, true, true);
 $app->addBodyParsingMiddleware();
 
 // Create instances of the repositories and servicies
-$customerRepository = new CustomerRepository($pdo);
-$customerService = new CustomerService($customerRepository);
+$userRepository = new userRepository($pdo);
+$userService = new userService($userRepository);
 
 // Define API routes
-$app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $customerService) {
-    $customerController = new CustomerController($responseFactory, $customerService);
+$app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $userService) {
+    $userController = new userController($responseFactory, $userService);
 
-    $group->get('/customers', [$customerController, 'getCustomers']);
-    $group->get('/customers/{id}', [$customerController, 'getCustomerById']);
-    $group->post('/customers', [$customerController, 'createCustomer']);
-    $group->delete('/customers/{id}', [$customerController, 'deleteCustomer']);
-    $group->put('/customers/{id}', [$customerController, 'updateCustomer']);
+    $group->get('/users', [$userController, 'getUsers']);
+    $group->get('/users/{id}', [$userController, 'getUserById']);
+    $group->post('/users', [$userController, 'createUser']);
+    $group->delete('/users/{id}', [$userController, 'deleteUser']);
+    $group->put('/users/{id}', [$userController, 'updateUser']);
 });
 
 // Run the application
