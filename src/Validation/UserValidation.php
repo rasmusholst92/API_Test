@@ -10,7 +10,7 @@ class UserValidation
             throw new \Exception('Invalid data format: not an array.');
         }
 
-        $requiredFields = ['username', 'email'];
+        $requiredFields = ['username', 'email', 'role'];
         $errors = [];
 
         foreach ($requiredFields as $field) {

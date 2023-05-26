@@ -25,13 +25,15 @@ class UserRepository
 
     public function createUser($data)
     {
-        $statement = $this->pdo->prepare('INSERT INTO users (username, email) 
-        VALUES (:username, :email)');
+        $statement = $this->pdo->prepare('INSERT INTO users (username, email, role)   
+      VALUES (:username, :email, :role)');
         $statement->bindValue(':username', $data['username']);
         $statement->bindValue(':email', $data['email']);
+        $statement->bindValue(':role', $data['role'] ?? 'user'); // Default to 'user' if no role is provided
         $statement->execute();
         return $this->pdo->lastInsertId();
     }
+
 
     public function deleteUser($id)
     {
@@ -51,12 +53,12 @@ class UserRepository
 
     public function updateUser($id, $data)
     {
-        $statement = $this->pdo->prepare('UPDATE users SET username = :username, email = :email WHERE user_id = :id');
+        $statement = $this->pdo->prepare('UPDATE users SET username = :username, email = :email, role = :role WHERE user_id = :id');
         $statement->execute([
             ':id' => $id,
             ':username' => $data['username'],
-            ':email' => $data['email']
+            ':email' => $data['email'],
+            ':role' => $data['role'] ?? 'user' // Default to 'user' if no role is provided  
         ]);
     }
-
 }
