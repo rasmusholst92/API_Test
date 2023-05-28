@@ -19,6 +19,11 @@ class UserService
         return $this->repository->findUserById($id);
     }
 
+    public function getUserByUsername($username)
+    {
+        return $this->repository->findUserByUsername($username);
+    }
+
     public function createUser($data)
     {
         return $this->repository->createUser($data);
@@ -26,9 +31,9 @@ class UserService
 
     public function deleteUser($id)
     {
-        $customer = $this->repository->findUserById($id);
+        $user = $this->repository->findUserById($id);
 
-        if (!$customer) {
+        if (!$user) {
             throw new Exception('User not found');
         }
 

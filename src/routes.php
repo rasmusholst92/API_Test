@@ -10,6 +10,7 @@ function getRoutes($app, $responseFactory, $userservice)
 
         $group->get('/users', [$userController, 'getUsers']);
         $group->get('/users/{id}', [$userController, 'getUserById']);
+        $group->get('/users/username/{username}', [$userController, 'getUserByUsername']);
         $group->post('/users', [$userController, 'createUser']);
         $group->delete('/users/{id}', [$userController, 'deleteUser']);
         $group->put('/users/{id}', [$userController, 'updateUser']);
