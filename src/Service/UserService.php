@@ -19,11 +19,6 @@ class UserService
         return $this->repository->findUserById($id);
     }
 
-    public function getUserByUsername($username)
-    {
-        return $this->repository->findUserByUsername($username);
-    }
-
     public function createUser($data)
     {
         return $this->repository->createUser($data);

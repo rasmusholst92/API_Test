@@ -23,14 +23,6 @@ class UserRepository
         return $statement->fetch();
     }
 
-    public function findUserByUsername($username)
-    {
-        $statement = $this->pdo->prepare('SELECT * FROM users WHERE username = :username');
-        $statement->bindParam(':username', $username);
-        $statement->execute();
-        return $statement->fetch();
-    }
-
     public function createUser($data)
     {
         $statement = $this->pdo->prepare('INSERT INTO users (username, email, role)   
