@@ -2,7 +2,6 @@
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
-use Validation\UserValidation;
 
 class UserController
 {
@@ -47,7 +46,6 @@ class UserController
     {
         try {
             $data = $request->getParsedBody();
-            UserValidation::validate($data);
             $newUserId = $this->service->createUser($data);
             $response->getBody()->write(json_encode(['message' => "User successfully created"]));
             return $response->withHeader('Content-Type', 'application/json');
@@ -80,9 +78,6 @@ class UserController
         try {
             $id = $args['id'];
             $data = $request->getParsedBody();
-
-            // Validate data using our validation class
-            UserValidation::validate($data);
 
             $this->service->updateUser($id, $data);
             $response->getBody()->write(json_encode(['message' => "User successfully updated"]));
