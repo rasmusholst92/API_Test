@@ -46,6 +46,7 @@ class ComposerStaticInitf0dd081a74b5f1d0ee5a1977b3323bc2
         ),
         'F' => 
         array (
+            'Firebase\\JWT\\' => 13,
             'Fig\\Http\\Message\\' => 17,
             'FastRoute\\' => 10,
         ),
@@ -114,6 +115,10 @@ class ComposerStaticInitf0dd081a74b5f1d0ee5a1977b3323bc2
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Fig\\Http\\Message\\' => 
         array (

@@ -3,7 +3,8 @@
     "slim/slim": "^4.9",
     "vlucas/phpdotenv": "^5.4",
     "slim/psr7": "^1.6",
-    "tuupola/cors-middleware": "^1.4"
+    "tuupola/cors-middleware": "^1.4",
+    "firebase/php-jwt": "^6.5"
   },
   "autoload": {
     "psr-4": {
