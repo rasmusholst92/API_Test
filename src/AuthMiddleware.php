@@ -1,6 +1,7 @@
 <?php
 
 use \Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
@@ -27,7 +28,8 @@ class AuthMiddleware
         $jwt = str_replace('Bearer ', '', $authHeader);
 
         try {
-            $decoded = (array) JWT::decode($jwt, $this->jwtKey, ['HS256']);
+            $decoded = (array) JWT::decode($jwt, new Key($this->jwtKey, 'HS256'));
+
 
             $request = $request->withAttribute('jwt', (array) $decoded);
 

@@ -116,7 +116,7 @@ class UserController
             }
 
             // User is authenticated, create a JWT and return it
-            $key = 'MySecret'; // Choose a secure key
+            $key = $_ENV['JWT_SECRET']; // Choose a secure key
 
             $payload = array(
                 "iss" => "yourdomain.com",

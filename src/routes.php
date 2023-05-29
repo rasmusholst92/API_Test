@@ -7,7 +7,7 @@ function getRoutes($app, $responseFactory, $userservice)
 {
     $app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $userservice) {
         $userController = new UserController($responseFactory, $userservice);
-        $authMiddleware = new AuthMiddleware('MySecret'); // same secret as in the UserController
+        $authMiddleware = new AuthMiddleware($_ENV['JWT_SECRET']);
 
         $group->post('/login', [$userController, 'loginUser']);
 
