@@ -84,17 +84,12 @@ class UserController
             $response->getBody()->write(json_encode(['message' => "User successfully updated"]));
             return $response->withHeader('Content-Type', 'application/json');
         } catch (\Exception $e) {
-            // If an exception occurs, decode the error messages
             $errors = json_decode($e->getMessage(), true);
-            // If the messages aren't an array (i.e., it's a different kind of exception), put the message in an array
             if (!is_array($errors)) {
                 $errors = [$e->getMessage()];
             }
 
-            // Return all error messages
             $response->getBody()->write(json_encode(['errors' => $errors]));
-
-            // Determine the status code based on the type of exception
             $status = $e instanceof \InvalidArgumentException ? 400 : 500;
             return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
         }
@@ -110,33 +105,28 @@ class UserController
                 return $response->withStatus(401); // Unauthorized
             }
 
-            // Verify the password
             if ($data['password'] !== $user['password']) {
                 return $response->withStatus(401); // Unauthorized
             }
 
-            // User is authenticated, create a JWT and return it
-            $key = $_ENV['JWT_SECRET']; // Choose a secure key
+            $key = $_ENV['JWT_SECRET'];
 
             $payload = array(
                 "iss" => "yourdomain.com",
                 "aud" => "yourdomain.com",
                 "iat" => time(),
-                "exp" => time() + (30 * 60),
-                // JWT will expire after 30 minutes
+                "exp" => time() + (60 * 60),
                 "sub" => $user['user_id'],
                 "role" => $user['role']
             );
 
             $jwt = JWT::encode($payload, $key, 'HS256');
 
-            $response->getBody()->write(json_encode(['message' => 'Login successful', 'jwt' => $jwt]));
+            $response->getBody()->write(json_encode(['status' => 200, 'message' => 'Login successful', 'bearer' => $jwt]));
             return $response->withHeader('Content-Type', 'application/json');
         } catch (\Exception $e) {
             $response->getBody()->write(json_encode(['message' => $e->getMessage()]));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(500); // Internal error
         }
     }
-
-
 }

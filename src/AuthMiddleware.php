@@ -2,9 +2,7 @@
 
 use \Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Slim\Psr7\Request;
 use Slim\Psr7\Response;
-use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 class AuthMiddleware
 {
@@ -21,7 +19,7 @@ class AuthMiddleware
 
         if (!$authHeader) {
             $response = new Response();
-            $response->getBody()->write(json_encode(['message' => 'Missing Authorization header']));
+            $response->getBody()->write(json_encode(['message' => 'Access denied!']));
             return $response->withStatus(401);
         }
 
@@ -30,8 +28,14 @@ class AuthMiddleware
         try {
             $decoded = (array) JWT::decode($jwt, new Key($this->jwtKey, 'HS256'));
 
+            // Check if the user is an admin
+            if (!isset($decoded['role']) || $decoded['role'] !== 'admin') {
+                $response = new Response();
+                $response->getBody()->write(json_encode(['message' => 'Access denied!']));
+                return $response->withStatus(403);
+            }
 
-            $request = $request->withAttribute('jwt', (array) $decoded);
+            $request = $request->withAttribute('jwt', $decoded);
 
             return $handler->handle($request);
         } catch (\Exception $e) {
