@@ -8,6 +8,8 @@ function getRoutes($app, $responseFactory, $userservice)
     $app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $userservice) {
         $userController = new UserController($responseFactory, $userservice);
 
+        $group->post('/login', [$userController, 'loginUser']);
+
         $group->get('/users', [$userController, 'getUsers']);
         $group->get('/users/{id}', [$userController, 'getUserById']);
         $group->post('/users', [$userController, 'createUser']);

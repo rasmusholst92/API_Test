@@ -25,10 +25,10 @@ class UserRepository
 
     public function createUser($data)
     {
-        $statement = $this->pdo->prepare('INSERT INTO users (username, email, role)   
-      VALUES (:username, :email, :role)');
+        $statement = $this->pdo->prepare('INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)');
         $statement->bindValue(':username', $data['username']);
         $statement->bindValue(':email', $data['email']);
+        $statement->bindValue(':password', $data['password']);
         $statement->bindValue(':role', $data['role'] ?? 'user'); // Default to 'user' if no role is provided
         $statement->execute();
         return $this->pdo->lastInsertId();
@@ -60,5 +60,13 @@ class UserRepository
             ':email' => $data['email'],
             ':role' => $data['role'] ?? 'user' // Default to 'user' if no role is provided  
         ]);
+    }
+
+    public function findUserByUsername($username)
+    {
+        $statement = $this->pdo->prepare('SELECT * FROM users WHERE username = :username');
+        $statement->bindParam(':username', $username);
+        $statement->execute();
+        return $statement->fetch();
     }
 }

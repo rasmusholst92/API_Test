@@ -2,6 +2,7 @@
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use \Firebase\JWT\JWT;
 
 class UserController
 {
@@ -98,4 +99,44 @@ class UserController
             return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
         }
     }
+
+    public function loginUser(Request $request, Response $response, $args)
+    {
+        try {
+            $data = $request->getParsedBody();
+            $user = $this->service->findUserByUsername($data['username']);
+
+            if (!$user) {
+                return $response->withStatus(401); // Unauthorized
+            }
+
+            // Verify the password
+            if ($data['password'] !== $user['password']) {
+                return $response->withStatus(401); // Unauthorized
+            }
+
+            // User is authenticated, create a JWT and return it
+            $key = 'MySecret'; // Choose a secure key
+
+            $payload = array(
+                "iss" => "yourdomain.com",
+                "aud" => "yourdomain.com",
+                "iat" => time(),
+                "exp" => time() + (30 * 60),
+                // JWT will expire after 30 minutes
+                "sub" => $user['user_id'],
+                "role" => $user['role']
+            );
+
+            $jwt = JWT::encode($payload, $key, 'HS256');
+
+            $response->getBody()->write(json_encode(['message' => 'Login successful', 'jwt' => $jwt]));
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode(['message' => $e->getMessage()]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500); // Internal error
+        }
+    }
+
+
 }

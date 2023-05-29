@@ -44,4 +44,9 @@ class UserService
 
         $this->repository->updateUser($id, $data);
     }
+
+    public function findUserByUsername($username)
+    {
+        return $this->repository->findUserByUsername($username);
+    }
 }

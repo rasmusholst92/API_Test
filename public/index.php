@@ -1,6 +1,5 @@
 <?php
 
-use Slim\Routing\RouteCollectorProxy;
 use Dotenv\Dotenv;
 
 // Import various repositories, services, and controllers.
