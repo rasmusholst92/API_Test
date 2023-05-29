@@ -7,13 +7,15 @@ function getRoutes($app, $responseFactory, $userservice)
 {
     $app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $userservice) {
         $userController = new UserController($responseFactory, $userservice);
+        $authMiddleware = new AuthMiddleware('MySecret'); // same secret as in the UserController
 
         $group->post('/login', [$userController, 'loginUser']);
 
-        $group->get('/users', [$userController, 'getUsers']);
-        $group->get('/users/{id}', [$userController, 'getUserById']);
-        $group->post('/users', [$userController, 'createUser']);
-        $group->delete('/users/{id}', [$userController, 'deleteUser']);
-        $group->put('/users/{id}', [$userController, 'updateUser']);
+        $group->get('/users', [$userController, 'getUsers'])->add($authMiddleware);
+        $group->get('/users/{id}', [$userController, 'getUserById'])->add($authMiddleware);
+        $group->post('/users', [$userController, 'createUser'])->add($authMiddleware);
+        $group->delete('/users/{id}', [$userController, 'deleteUser'])->add($authMiddleware);
+        $group->put('/users/{id}', [$userController, 'updateUser'])->add($authMiddleware);
     });
+
 }
