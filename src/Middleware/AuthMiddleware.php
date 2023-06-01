@@ -1,4 +1,5 @@
 <?php
+namespace App\Middleware;
 
 use \Firebase\JWT\JWT;
 use Firebase\JWT\Key;

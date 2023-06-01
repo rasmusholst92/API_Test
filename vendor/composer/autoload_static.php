@@ -54,6 +54,10 @@ class ComposerStaticInitf0dd081a74b5f1d0ee5a1977b3323bc2
         array (
             'Dotenv\\' => 7,
         ),
+        'A' => 
+        array (
+            'App\\' => 4,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -132,10 +136,10 @@ class ComposerStaticInitf0dd081a74b5f1d0ee5a1977b3323bc2
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
-    );
-
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/../..' . '/src',
+        'App\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
     );
 
     public static $classMap = array (
@@ -152,7 +156,6 @@ class ComposerStaticInitf0dd081a74b5f1d0ee5a1977b3323bc2
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitf0dd081a74b5f1d0ee5a1977b3323bc2::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitf0dd081a74b5f1d0ee5a1977b3323bc2::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitf0dd081a74b5f1d0ee5a1977b3323bc2::$fallbackDirsPsr4;
             $loader->classMap = ComposerStaticInitf0dd081a74b5f1d0ee5a1977b3323bc2::$classMap;
 
         }, null, ClassLoader::class);
