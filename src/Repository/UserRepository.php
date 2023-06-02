@@ -25,15 +25,16 @@ class UserRepository
 
     public function createUser($data)
     {
+        $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
+
         $statement = $this->pdo->prepare('INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)');
         $statement->bindValue(':username', $data['username']);
         $statement->bindValue(':email', $data['email']);
-        $statement->bindValue(':password', $data['password']);
-        $statement->bindValue(':role', $data['role'] ?? 'user'); // Default to 'user' if no role is provided
+        $statement->bindValue(':password', $hashedPassword);
+        $statement->bindValue(':role', $data['role'] ?? 'user'); // Default to 'user' if no role is provided  
         $statement->execute();
         return $this->pdo->lastInsertId();
     }
-
 
     public function deleteUser($id)
     {

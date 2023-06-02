@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Controller\LoginController;
 use App\Controller\UserController;
 use App\Middleware\AuthMiddleware;

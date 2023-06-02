@@ -30,7 +30,7 @@ class LoginController
                 return $response->withStatus(401); // Unauthorized
             }
 
-            if ($data['password'] !== $user['password']) {
+            if (!password_verify($data['password'], $user['password'])) {
                 return $response->withStatus(401); // Unauthorized
             }
 
