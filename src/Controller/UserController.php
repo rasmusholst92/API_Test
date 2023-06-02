@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use Exception;
 use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
@@ -24,7 +23,7 @@ class UserController
             $users = $this->service->getUsers();
             $response->getBody()->write(json_encode($users));
             return $response->withHeader('Content-Type', 'application/json');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $response->getBody()->write($e->getMessage());
             return $response->withStatus(500);
         }
@@ -40,7 +39,7 @@ class UserController
             }
             $response->getBody()->write(json_encode($user));
             return $response->withHeader('Content-Type', 'application/json');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $response->getBody()->write($e->getMessage());
             return $response->withStatus(500);
         }
@@ -71,7 +70,7 @@ class UserController
         } catch (\InvalidArgumentException $e) {
             $response->getBody()->write(json_encode(['error' => 'User not found']));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(404); // Not found
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $response->getBody()->write(json_encode(['message' => $e->getMessage()]));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(500); // Internal error
         }
