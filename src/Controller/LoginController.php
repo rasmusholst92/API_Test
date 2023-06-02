@@ -14,6 +14,10 @@ class LoginController
     private $responseFactory;
     private $service;
 
+    private const JWT_ISSUER = 'mydomain.com';
+    private const JWT_AUDIENCE = 'mydomain.com';
+    private const JWT_EXPIRATION_TIME = 60 * 60; // 1 hour
+
     public function __construct(ResponseFactory $responseFactory, UserService $service)
     {
         $this->responseFactory = $responseFactory;
@@ -37,10 +41,10 @@ class LoginController
             $key = $_ENV['JWT_SECRET'];
 
             $payload = array(
-                "iss" => "yourdomain.com",
-                "aud" => "yourdomain.com",
+                "iss" => self::JWT_ISSUER,
+                "aud" => self::JWT_AUDIENCE,
                 "iat" => time(),
-                "exp" => time() + (60 * 60),
+                "exp" => time() + self::JWT_EXPIRATION_TIME,
                 "sub" => $user['user_id'],
                 "role" => $user['role']
             );
