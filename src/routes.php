@@ -6,7 +6,6 @@ use App\Middleware\AuthMiddleware;
 use Slim\Routing\RouteCollectorProxy;
 
 // TO DO
-// Authentication på /users/{id} hvis brugerens id er det givende id der er logget ind.
 
 function getRoutes($app, $responseFactory, $userservice)
 {
