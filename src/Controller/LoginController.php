@@ -51,7 +51,16 @@ class LoginController
 
             $jwt = JWT::encode($payload, $key, 'HS256');
 
-            $response->getBody()->write(json_encode(['status' => 200, 'message' => 'Login successful', 'bearer' => $jwt]));
+            $response->getBody()->write(json_encode([
+                'status' => 200,
+                'message' => 'Login successful',
+                'user' => [
+                    'id' => $user['user_id'],
+                    'username' => $user['username'],
+                    'role' => $user['role']
+                ],
+                'bearer' => $jwt
+            ]));
             return $response->withHeader('Content-Type', 'application/json');
         } catch (\Exception $e) {
             $response->getBody()->write(json_encode(['message' => $e->getMessage()]));
