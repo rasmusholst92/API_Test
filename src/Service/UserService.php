@@ -21,6 +21,14 @@ class UserService
 
     public function createUser($data)
     {
+        $existingUsername = $this->repository->findUserByUsername($data['username']);
+        $existingEmail = $this->repository->findUserByEmail($data['email']);
+        if ($existingUsername) {
+            throw new \Exception('Username already exists');
+        }
+        if ($existingEmail) {
+            throw new \Exception('Email already exists');
+        }
         return $this->repository->createUser($data);
     }
 
@@ -48,5 +56,10 @@ class UserService
     public function findUserByUsername($username)
     {
         return $this->repository->findUserByUsername($username);
+    }
+
+    public function findUserByEmail($email)
+    {
+        return $this->repository->findUserByEmail($email);
     }
 }

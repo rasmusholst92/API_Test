@@ -49,6 +49,16 @@ class UserController
     {
         try {
             $data = $request->getParsedBody();
+            $existingUsername = $this->service->findUserByUsername($data['username']);
+            $existingEmail = $this->service->findUserByEmail($data['email']);
+            if ($existingUsername) {
+                $response->getBody()->write(json_encode(['status' => '409', 'message' => 'Username already exists.']));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(409); // Conflict
+            }
+            if ($existingEmail) {
+                $response->getBody()->write(json_encode(['status' => '419', 'message' => 'Email already exists.']));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(419); // Conflict
+            }
             $newUserId = $this->service->createUser($data);
             $response->getBody()->write(json_encode(['message' => "User successfully created"]));
             return $response->withHeader('Content-Type', 'application/json');
@@ -58,7 +68,6 @@ class UserController
             return $response->withHeader('Content-Type', 'application/json')->withStatus(400); // Invalid data
         }
     }
-
 
     public function deleteUser(Request $request, Response $response, $args)
     {
