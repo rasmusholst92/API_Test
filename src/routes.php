@@ -5,7 +5,7 @@ use App\Controller\UserController;
 use App\Middleware\AuthMiddleware;
 use Slim\Routing\RouteCollectorProxy;
 
-// TO DO
+// TO DO: LoginController skal bruge ny LoginService & LoginRepository i stedet.
 
 function getRoutes($app, $responseFactory, $userservice)
 {
