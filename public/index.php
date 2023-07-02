@@ -5,8 +5,11 @@ use Dotenv\Dotenv;
 // Import various repositories, services, and controllers.
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/Controller/UserController.php';
+require_once __DIR__ . '/../src/Controller/LoginController.php';
 require_once __DIR__ . '/../src/Service/UserService.php';
+require_once __DIR__ . '/../src/Service/LoginService.php';
 require_once __DIR__ . '/../src/Repository/UserRepository.php';
+require_once __DIR__ . '/../src/Repository/LoginRepository.php';
 
 // Load environment variables
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
@@ -38,10 +41,12 @@ $app->addBodyParsingMiddleware();
 // Create instances of the repositories and services  
 $userRepository = new UserRepository($pdo);
 $userService = new UserService($userRepository);
+$loginRepository = new LoginRepository($pdo);
+$loginService = new LoginService($loginRepository);
 
 // Define API routes
 require_once __DIR__ . '/../src/routes.php';
-getRoutes($app, $responseFactory, $userService);
+getRoutes($app, $responseFactory, $userService, $loginService);
 
 // Run the application  
 $app->run($request);

@@ -105,4 +105,20 @@ class UserController
             return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
         }
     }
+
+    public function getUserByUsername(Request $request, Response $response, $args)
+    {
+        try {
+            $username = $args['username'];
+            $user = $this->service->findUserByUsername($username);
+            if ($user === null) {
+                return $response->withStatus(401);
+            }
+            $response->getBody()->write(json_encode($user));
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            $response->getBody()->write($e->getMessage());
+            return $response->withStatus(500);
+        }
+    }
 }

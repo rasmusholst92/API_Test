@@ -6,7 +6,7 @@ use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use \Firebase\JWT\JWT;
-use UserService;
+use LoginService;
 
 
 class LoginController
@@ -18,7 +18,7 @@ class LoginController
     private const JWT_AUDIENCE = 'mydomain.com';
     private const JWT_EXPIRATION_TIME = 60 * 60; // 1 hour
 
-    public function __construct(ResponseFactory $responseFactory, UserService $service)
+    public function __construct(ResponseFactory $responseFactory, LoginService $service)
     {
         $this->responseFactory = $responseFactory;
         $this->service = $service;

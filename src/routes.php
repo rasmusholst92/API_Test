@@ -7,11 +7,11 @@ use Slim\Routing\RouteCollectorProxy;
 
 // TO DO: LoginController skal bruge ny LoginService & LoginRepository i stedet.
 
-function getRoutes($app, $responseFactory, $userservice)
+function getRoutes($app, $responseFactory, $userservice, $loginservice)
 {
-    $app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $userservice) {
+    $app->group('/api', function (RouteCollectorProxy $group) use ($responseFactory, $userservice, $loginservice) {
         $userController = new UserController($responseFactory, $userservice);
-        $loginController = new LoginController($responseFactory, $userservice);
+        $loginController = new LoginController($responseFactory, $loginservice);
 
         // Login Endpoints
         $group->post('/login', [$loginController, 'loginUser']);
