@@ -111,8 +111,9 @@ class UserController
         try {
             $username = $args['username'];
             $user = $this->service->findUserByUsername($username);
-            if ($user === null) {
-                return $response->withStatus(401);
+            if ($user === null || $user === false) {
+                $response->getBody()->write(json_encode(['error' => 'User not found']));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(404); // Not Found
             }
             $response->getBody()->write(json_encode($user));
             return $response->withHeader('Content-Type', 'application/json');

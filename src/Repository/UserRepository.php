@@ -70,7 +70,7 @@ class UserRepository
 
     public function findUserByUsername($username)
     {
-        $statement = $this->pdo->prepare('SELECT * FROM users WHERE username = :username');
+        $statement = $this->pdo->prepare('SELECT username FROM users WHERE username = :username');
         $statement->bindParam(':username', $username);
         $statement->execute();
         return $statement->fetch();

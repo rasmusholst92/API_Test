@@ -18,6 +18,7 @@ function getRoutes($app, $responseFactory, $userservice, $loginservice)
 
         // Users Endpoints
         $group->post('/users/create', [$userController, 'createUser']);
+        $group->get('/users/username/{username}', [$userController, 'getUserByUsername']);
         $group->group('', function (RouteCollectorProxy $group) use ($userController) {
             $group->get('/users', [$userController, 'getUsers']);
             $group->get('/users/{id}', [$userController, 'getUserById']);
